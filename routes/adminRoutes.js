@@ -1,77 +1,37 @@
 const express = require("express");
-
 const adminController = require("../controllers/adminController");
 const adminMiddleware = require("../middleware/adminMiddleware");
 const asyncHandler = require("../middleware/asyncHandler");
 
 const router = express.Router();
-
 // ======================================================
-// ADMIN LOGIN
-// POST /api/admin/login
+// ADMIN ACTIVITY LOG
 // ======================================================
-
-router.post(
-    "/login",
-    asyncHandler(adminController.login)
-);
-
-// ======================================================
-// ADMIN PROFILE
-// ======================================================
-
-// GET /api/admin/me
 router.get(
-    "/me",
+    "/activity",
     adminMiddleware,
-    asyncHandler(adminController.getMe)
+    asyncHandler(adminController.getActivityLog)
 );
 
-// PUT /api/admin/me
-router.put(
-    "/me",
-    adminMiddleware,
-    asyncHandler(adminController.updateMe)
-);
+// Stats
+router.get("/stats", adminMiddleware, asyncHandler(adminController.getDashboardStats));
 
-// ======================================================
-// ADMIN SECURITY
-// ======================================================
+// Auth
+router.post("/login", asyncHandler(adminController.login));
 
-// PUT /api/admin/me/password
-router.put(
-    "/me/password",
-    adminMiddleware,
-    asyncHandler(adminController.changePassword)
-);
+// Admin Profile
+router.get("/me", adminMiddleware, asyncHandler(adminController.getMe));
+router.put("/me", adminMiddleware, asyncHandler(adminController.updateMe));
+router.put("/me/password", adminMiddleware, asyncHandler(adminController.changePassword));
+router.patch("/me/deactivate", adminMiddleware, asyncHandler(adminController.deactivateMe));
+router.delete("/me", adminMiddleware, asyncHandler(adminController.deleteMe));
 
-// ======================================================
-// ADMIN ACCOUNT
-// ======================================================
+// User Management (NEW ROUTES)
+router.get("/users", adminMiddleware, asyncHandler(adminController.getAllUsers));
+router.get("/users/:id", adminMiddleware, asyncHandler(adminController.getUserDetails));
+router.patch("/users/:id/toggle-status", adminMiddleware, asyncHandler(adminController.toggleUserStatus));
 
-// PATCH /api/admin/me/deactivate
-router.patch(
-    "/me/deactivate",
-    adminMiddleware,
-    asyncHandler(adminController.deactivateMe)
-);
-
-// DELETE /api/admin/me
-router.delete(
-    "/me",
-    adminMiddleware,
-    asyncHandler(adminController.deleteMe)
-);
-router.get(
-    "/users",
-    adminMiddleware,
-    asyncHandler(adminController.getAllUsers)
-);
-// POST /api/admin/logout
-router.post(
-    "/logout",
-    adminMiddleware,
-    asyncHandler(adminController.logout)
-);
+// Logout
+router.post("/logout", adminMiddleware, asyncHandler(adminController.logout));
 
 module.exports = router;
