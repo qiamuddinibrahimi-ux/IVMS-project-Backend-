@@ -4,6 +4,11 @@ const adminMiddleware = require("../middleware/adminMiddleware");
 const asyncHandler = require("../middleware/asyncHandler");
 
 const router = express.Router();
+// POST /api/admin/refresh
+router.post(
+    "/refresh",
+    asyncHandler(adminController.refreshToken)
+);
 // ======================================================
 // ADMIN ACTIVITY LOG
 // ======================================================
@@ -11,6 +16,12 @@ router.get(
     "/activity",
     adminMiddleware,
     asyncHandler(adminController.getActivityLog)
+);
+// DELETE /api/admin/users/:id
+router.delete(
+    "/users/:id",
+    adminMiddleware,
+    asyncHandler(adminController.deleteUser) // New function needed
 );
 
 // Stats
